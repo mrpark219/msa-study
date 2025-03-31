@@ -23,6 +23,7 @@ public class WebSecurity {
 			)
 			.authorizeHttpRequests(authorizationHttpRequests -> authorizationHttpRequests
 				.requestMatchers("/users/**").permitAll()
+				.requestMatchers("/**").permitAll()
 				.requestMatchers(PathRequest.toH2Console()).permitAll()
 			);
 
