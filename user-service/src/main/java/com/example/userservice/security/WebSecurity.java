@@ -60,7 +60,7 @@ public class WebSecurity {
 	}
 
 	private AuthenticationFilter getAuthenticationFilter(AuthenticationManager authenticationManager) {
-		return new AuthenticationFilter(authenticationManager);
+		return new AuthenticationFilter(authenticationManager, userService, env);
 	}
 
 }
