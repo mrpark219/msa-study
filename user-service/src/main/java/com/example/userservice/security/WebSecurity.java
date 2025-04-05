@@ -47,6 +47,7 @@ public class WebSecurity {
 				headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
 			)
 			.authorizeHttpRequests(authorizationHttpRequests -> authorizationHttpRequests
+				.requestMatchers("/actuator/**").permitAll()
 				.requestMatchers("/**").access(
 					new WebExpressionAuthorizationManager(
 						"hasIpAddress('192.168.0.3')" // 로컬 컴퓨터 IP
