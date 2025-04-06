@@ -1,0 +1,6 @@
+token:
+  expiration_time: 86400000
+  secret: ZGV2LXNlcnZlcmRldi1zZXJ2ZXJkZXYtc2VydmVy
+
+gateway:
+  ip: 192.168.0.3
