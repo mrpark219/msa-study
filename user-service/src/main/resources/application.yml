@@ -16,6 +16,7 @@ spring:
   cloud:
     config:
       name: ecommerce
+      profile: dev
   config:
     import: optional:configserver:http://127.0.0.1:8888
 
