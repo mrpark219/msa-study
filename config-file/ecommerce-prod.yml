@@ -1,6 +1,6 @@
 token:
   expiration_time: 86400000
-  secret: cHJvZC1zZXJ2ZXJwcm9kLXNlcnZlcnByb2Qtc2VydmVy
+  secret: ZWNvbW1lcmNlLXByb2RlY29tbWVyY2UtcHJvZGVjb21tZXJjZS1wcm9kZWNvbW1lcmNlLXByb2RlY29tbWVyY2UtcHJvZGVjb21tZXJjZS1wcm9kZWNvbW1lcmNlLXByb2Q=
 
 gateway:
   ip: 192.168.0.3
