@@ -5,12 +5,11 @@ import com.example.userservice.dto.UserDto;
 import com.example.userservice.jpa.UserEntity;
 import com.example.userservice.jpa.UserRepository;
 import com.example.userservice.vo.ResponseOrder;
+import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -68,7 +68,14 @@ public class UserServiceImpl implements UserService {
 
 		UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
 
-		List<ResponseOrder> orderList = orderServiceClient.getOrders(userId);
+		List<ResponseOrder> orderList = null;
+
+		try {
+			orderList = orderServiceClient.getOrders(userId);
+		}
+		catch(FeignException ex) {
+			log.error(ex.getMessage());
+		}
 
 		userDto.setOrders(orderList);
 
