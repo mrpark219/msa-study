@@ -129,6 +129,7 @@ fabric.properties
 
 # Package Files #
 *.jar
+!kafka-connect/jars/*.jar
 *.war
 *.nar
 *.ear
@@ -174,3 +175,6 @@ Temporary Items
 *.icloud
 
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,macos
+
+# kafka-connect docker
+/kafka-connect/data/
