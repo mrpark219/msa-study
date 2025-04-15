@@ -21,7 +21,7 @@ public class KafkaProducerConfig {
 
 		Map<String, Object> properties = new HashMap<>();
 
-		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
+		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9093");
 		properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 		properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 
