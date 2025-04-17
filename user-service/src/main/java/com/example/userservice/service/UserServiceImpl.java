@@ -8,6 +8,8 @@ import com.example.userservice.vo.ResponseOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,13 +31,15 @@ public class UserServiceImpl implements UserService {
 	private final RestTemplate restTemplate;
 	private final Environment env;
 	private final OrderServiceClient orderServiceClient;
+	private final CircuitBreakerFactory<?, ?> circuitBreakerFactory;
 
-	public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, RestTemplate restTemplate, Environment env, OrderServiceClient orderServiceClient) {
+	public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, RestTemplate restTemplate, Environment env, OrderServiceClient orderServiceClient, CircuitBreakerFactory<?, ?> circuitBreakerFactory) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.restTemplate = restTemplate;
 		this.env = env;
 		this.orderServiceClient = orderServiceClient;
+		this.circuitBreakerFactory = circuitBreakerFactory;
 	}
 
 	@Override
@@ -67,7 +71,10 @@ public class UserServiceImpl implements UserService {
 
 		UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
 
-		List<ResponseOrder> orderList = orderServiceClient.getOrders(userId);
+		CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitBreaker");
+		List<ResponseOrder> orderList = circuitBreaker.run(() -> orderServiceClient.getOrders(userId),
+			throwable -> new ArrayList<>()
+		);
 
 		userDto.setOrders(orderList);
 
