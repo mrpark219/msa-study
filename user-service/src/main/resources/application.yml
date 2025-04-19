@@ -24,6 +24,9 @@ spring:
   cloud:
     config:
       name: user-service
+    openfeign:
+      micrometer:
+        enabled: true
   config:
     import: optional:configserver:http://127.0.0.1:8888
 
@@ -42,12 +45,24 @@ greeting:
 logging:
   level:
     com.example.userservice: DEBUG
+  pattern:
+    correlation: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
 
 management:
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      consume: b3
+      produce: b3_multi
+    enabled: true
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
   endpoints:
     web:
       exposure:
-        include: refresh,health,beans,busrefresh
+        include: "*"
 
 #token:
 #  expiration_time: 86400000

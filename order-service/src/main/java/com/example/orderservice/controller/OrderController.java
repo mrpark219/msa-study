@@ -7,6 +7,7 @@ import com.example.orderservice.messagequeue.OrderProducer;
 import com.example.orderservice.service.OrderService;
 import com.example.orderservice.vo.RequestOrder;
 import com.example.orderservice.vo.ResponseOrder;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.core.env.Environment;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/order-service")
 public class OrderController {
@@ -37,6 +39,8 @@ public class OrderController {
 	@PostMapping("/{userId}/orders")
 	public ResponseEntity<ResponseOrder> createOrder(@PathVariable String userId, @RequestBody RequestOrder requestOrder) {
 
+		log.info("Before add orders data");
+
 		ModelMapper mapper = new ModelMapper();
 		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
@@ -51,11 +55,15 @@ public class OrderController {
 
 		ResponseOrder responseOrder = mapper.map(orderDto, ResponseOrder.class);
 
+		log.info("After added orders data");
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseOrder);
 	}
 
 	@GetMapping("/{userId}/orders")
 	public ResponseEntity<List<ResponseOrder>> getOrder(@PathVariable String userId) {
+
+		log.info("Before retrieve orders data");
 
 		Iterable<OrderEntity> orderList = orderService.getOrdersByUserId(userId);
 
@@ -63,6 +71,8 @@ public class OrderController {
 		orderList.forEach(v -> {
 			result.add(new ModelMapper().map(v, ResponseOrder.class));
 		});
+
+		log.info("Add retrieved orders data");
 
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}

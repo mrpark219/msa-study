@@ -71,10 +71,12 @@ public class UserServiceImpl implements UserService {
 
 		UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
 
+		log.info("Before call orders microservice");
 		CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitBreaker");
 		List<ResponseOrder> orderList = circuitBreaker.run(() -> orderServiceClient.getOrders(userId),
 			throwable -> new ArrayList<>()
 		);
+		log.info("After called orders microservice");
 
 		userDto.setOrders(orderList);
 
