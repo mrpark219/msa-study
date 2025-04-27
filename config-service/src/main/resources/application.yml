@@ -27,6 +27,6 @@ management:
 encrypt:
 #  key: testKey
   key-store:
-    location: file://${user.home}/workspace/msa-study/keystore/apiEncryptionKey.kys
+    location: classpath:keystore/apiEncryptionKey.kys
     password: 1q2w3e4r
     alias: apiEncryptionKey
