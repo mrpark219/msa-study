@@ -31,3 +31,18 @@ docker run -d \
 - `-p 15672:15672`: 관리 UI 접근 포트 매핑
 - `-e RABBITMQ_DEFAULT_USER/PASS`: 초기 접속 계정 설정
 - `rabbitmq:4.0-management`: RabbitMQ 관리 UI가 포함된 이미지 사용
+
+## 3. Configuration Service 배포
+
+```shell
+docker run -d \
+  -p 8888:8888 \
+  --network msa-study-network \
+  -e "spring.rabbitmq.host=rabbitmq" \
+  --name config-service \
+  mrpark219/config-service:1.0
+```
+
+- `-p 8888:8888`: 컨테이너의 8888 포트를 호스트의 8888 포트에 매핑
+- `-e "spring.rabbitmq.host=rabbitmq"`: Spring 애플리케이션이 연결할 RabbitMQ 호스트 지정
+- `mrpark219/config-service:1.0`: 사용할 이미지 이름 및 태그
