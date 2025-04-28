@@ -1,7 +1,8 @@
-version: '2'
+networks:
+  kafka-connect-network:
+    driver: bridge
 
 services:
-
   mariadb:
     image: mariadb
     container_name: mariadb
@@ -12,12 +13,21 @@ services:
       - "3306:3306"
     volumes:
       - ./data/mariadb:/var/lib/mysql
+    networks:
+      - kafka-connect-network
 
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
     ports:
       - "2181:2181"
+    networks:
+      - kafka-connect-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   kafka:
     image: wurstmeister/kafka
@@ -33,15 +43,19 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     depends_on:
       - zookeeper
+    networks:
+      - kafka-connect-network
+    healthcheck:
+      test: ["CMD", "kafka-topics.sh", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   kafka-connector-mariadb:
     image: confluentinc/cp-kafka-connect
     container_name: kafka-connector-mariadb
     ports:
       - "8083:8083"
-    links:
-      - kafka
-      - zookeeper
     environment:
       CONNECT_BOOTSTRAP_SERVERS: kafka:9092
       CONNECT_REST_PORT: 8083
@@ -56,8 +70,15 @@ services:
       CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_REST_ADVERTISED_HOST_NAME: "localhost"
+      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connector-mariadb
       CONNECT_LOG4J_ROOT_LOGLEVEL: DEBUG
       CONNECT_PLUGIN_PATH: "/usr/share/java,/etc/kafka-connect/jars"
     volumes:
       - ./jars:/etc/kafka-connect/jars
+    depends_on:
+      kafka:
+        condition: service_healthy
+      zookeeper:
+        condition: service_healthy
+    networks:
+      - kafka-connect-network
