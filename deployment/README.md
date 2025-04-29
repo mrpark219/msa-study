@@ -46,3 +46,16 @@ docker run -d \
 - `-p 8888:8888`: 컨테이너의 8888 포트를 호스트의 8888 포트에 매핑
 - `-e "spring.rabbitmq.host=rabbitmq"`: Spring 애플리케이션이 연결할 RabbitMQ 호스트 지정
 - `mrpark219/config-service:1.0`: 사용할 이미지 이름 및 태그
+
+## 4. Discovery Service 배포
+
+```shell
+docker run -d \
+  -p 8761:8761 \
+  --network msa-study-network \
+  --name discovery-service \
+  mrpark219/discovery-service:1.0
+```
+
+- `-p 8761:8761`: 컨테이너의 8761 포트를 호스트의 8761 포트에 매핑
+- `mrpark219/discovery-service:1.0`: 사용할 이미지 이름 및 태그
