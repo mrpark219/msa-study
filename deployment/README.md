@@ -59,3 +59,22 @@ docker run -d \
 
 - `-p 8761:8761`: 컨테이너의 8761 포트를 호스트의 8761 포트에 매핑
 - `mrpark219/discovery-service:1.0`: 사용할 이미지 이름 및 태그
+
+## 5. Api Gateway Service 배포
+
+```shell
+docker run -d \
+ -p 8000:8000 \
+ --network msa-study-network \
+ -e "spring.cloud.config.uri=http://config-service:8888" \
+ -e "spring.rabbitmq.host=rabbitmq" \
+ -e "eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/" \
+ --name api-gateway-service \
+ mrpark219/api-gateway-service:1.0
+```
+
+- `-p 8000:8000`: 컨테이너의 8000번 포트를 호스트의 8000번 포트로 매핑
+- `-e "spring.cloud.config.uri=http://config-service:8888"`: 설정 서버(Config Server) URI를 환경변수로 설정
+- `-e "spring.rabbitmq.host=rabbitmq"`: Spring 애플리케이션이 연결할 RabbitMQ 호스트 지정
+- `-e "eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/"`: Eureka 서버의 서비스 등록 주소를 환경변수로 설정
+- `mrpark219/api-gateway-service:1.0`: 사용할 이미지 이름 및 태그
