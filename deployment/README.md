@@ -78,3 +78,22 @@ docker run -d \
 - `-e "spring.rabbitmq.host=rabbitmq"`: Spring 애플리케이션이 연결할 RabbitMQ 호스트 지정
 - `-e "eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/"`: Eureka 서버의 서비스 등록 주소를 환경변수로 설정
 - `mrpark219/api-gateway-service:1.0`: 사용할 이미지 이름 및 태그
+
+## 6. MariaDB 배포
+
+```shell
+docker run -d \
+  --name msa-mariadb \
+  --network msa-study-network \
+  -e MYSQL_DATABASE=mydb \
+  -e MYSQL_ROOT_PASSWORD=1234 \
+  -p 3306:3306 \
+  -v "./data/mariadb:/var/lib/mysql" \
+  mariadb
+```
+
+- `-e MYSQL_DATABASE=mydb`: 생성할 기본 데이터베이스 이름을 `mydb`로 설정
+- `-e MYSQL_ROOT_PASSWORD=1234`: 루트 사용자 비밀번호를 `1234`로 설정
+- `-p 3306:3306`: MariaDB의 기본 포트(3306)를 호스트와 매핑
+- `-v "./data/mariadb:/var/lib/mysql"`: 호스트의 `./data/mariadb` 디렉토리를 컨테이너의 데이터 디렉토리로 마운트하여 데이터 영속성 확보
+- `mariadb`: 사용할 이미지 이름
