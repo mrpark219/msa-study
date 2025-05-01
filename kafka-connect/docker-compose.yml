@@ -1,6 +1,7 @@
 networks:
-  kafka-connect-network:
-    driver: bridge
+  msa-study-network:
+    name: msa-study-network
+    external: true
 
 services:
   mariadb:
@@ -14,7 +15,7 @@ services:
     volumes:
       - ./data/mariadb:/var/lib/mysql
     networks:
-      - kafka-connect-network
+      - msa-study-network
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -22,7 +23,7 @@ services:
     ports:
       - "2181:2181"
     networks:
-      - kafka-connect-network
+      - msa-study-network
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "2181"]
       interval: 10s
@@ -44,7 +45,7 @@ services:
     depends_on:
       - zookeeper
     networks:
-      - kafka-connect-network
+      - msa-study-network
     healthcheck:
       test: ["CMD", "kafka-topics.sh", "--bootstrap-server", "localhost:9092", "--list"]
       interval: 10s
@@ -81,4 +82,4 @@ services:
       zookeeper:
         condition: service_healthy
     networks:
-      - kafka-connect-network
+      - msa-study-network

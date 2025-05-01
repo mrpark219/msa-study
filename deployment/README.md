@@ -79,7 +79,7 @@ docker run -d \
 - `-e "eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/"`: Eureka 서버의 서비스 등록 주소를 환경변수로 설정
 - `mrpark219/api-gateway-service:1.0`: 사용할 이미지 이름 및 태그
 
-## 6. MariaDB 배포
+## 6. MariaDB 배포(kafka-connect에 포함되어 있으므로 생략 가능)
 
 ```shell
 docker run -d \
@@ -97,3 +97,13 @@ docker run -d \
 - `-p 3306:3306`: MariaDB의 기본 포트(3306)를 호스트와 매핑
 - `-v "./data/mariadb:/var/lib/mysql"`: 호스트의 `./data/mariadb` 디렉토리를 컨테이너의 데이터 디렉토리로 마운트하여 데이터 영속성 확보
 - `mariadb`: 사용할 이미지 이름
+
+## 7. Kafka 배포
+
+```shell
+docker compose -f ../kafka-connect/docker-compose.yml up -d
+```
+
+- `-f ../kafka-connect/docker-compose.yml`: 사용할 Docker Compose 파일 경로를 지정
+- `up`: Compose 파일에 정의된 모든 서비스를 시작
+- `-d`: 백그라운드(detached) 모드로 실행하여 터미널을 점유하지 않음
