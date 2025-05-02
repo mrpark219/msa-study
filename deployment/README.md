@@ -107,3 +107,13 @@ docker compose -f ../kafka-connect/docker-compose.yml up -d
 - `-f ../kafka-connect/docker-compose.yml`: 사용할 Docker Compose 파일 경로를 지정
 - `up`: Compose 파일에 정의된 모든 서비스를 시작
 - `-d`: 백그라운드(detached) 모드로 실행하여 터미널을 점유하지 않음
+
+## 8. Zipkin 배포
+
+```shell
+docker run -d \
+  --name zipkin \
+  --network msa-study-network \
+  -p 9411:9411 \
+  openzipkin/zipkin
+```
