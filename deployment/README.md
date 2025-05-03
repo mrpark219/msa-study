@@ -117,3 +117,31 @@ docker run -d \
   -p 9411:9411 \
   openzipkin/zipkin
 ```
+
+## 9. Prometheus 배포
+
+```shell
+docker run -d \
+  --name prometheus \
+  --network msa-study-network \
+  -p 9090:9090 \
+  -v ./prometheus.yml:/etc/prometheus/prometheus.yml \
+  prom/prometheus
+```
+
+- `-p 9090:9090`: Prometheus 웹 UI 접근을 위한 포트를 호스트에 노출
+- `-v ./prometheus.yml:/etc/prometheus/prometheus.yml`: 호스트의 설정 파일을 컨테이너 내 Prometheus 설정 경로에 마운트
+- `prom/prometheus`: Prometheus 공식 Docker 이미지
+
+## 10. Grafana 배포
+
+```shell
+docker run -d \
+  --name grafana \
+  --network msa-study-network \
+  -p 3000:3000 \
+  grafana/grafana
+```
+
+- `-p 3000:3000`: Grafana 웹 UI 접근을 위한 포트를 호스트에 노출
+- `grafana/grafana`: Grafana의 공식 Docker 이미지  
