@@ -53,3 +53,7 @@ management:
     web:
       exposure:
         include: "*"
+
+kafka:
+  producer:
+    bootstrap-server: localhost:9093
