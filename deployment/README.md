@@ -150,7 +150,6 @@ docker run -d \
 
 ```shell
 docker run -d \
-  -p 8080:8080 \
   --network msa-study-network \
   -e "spring.config.import=optional:configserver:http://config-service:8888" \
   -e "spring.rabbitmq.host=rabbitmq" \
@@ -165,3 +164,22 @@ docker run -d \
 - `-e "eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/"`: Eureka 서버의 서비스 등록 주소를 환경변수로 설정
 - `-e "management.zipkin.tracing.endpoint=http://zipkin:9411/api/v2/spans"`: Zipkin으로 분산 추적 데이터를 전송하기 위한 엔드포인트 설정
 - `mrpark219/user-service:1.0`: 사용할 이미지 이름 및 태그
+
+## 12. Order Service 배포
+
+```shell
+docker run -d \
+  --network msa-study-network \
+  -e "spring.datasource.url=jdbc:mariadb://mariadb:3306/mydb" \
+  -e "eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/" \
+  -e "management.zipkin.tracing.endpoint=http://zipkin:9411/api/v2/spans" \
+  -e "kafka.producer.bootstrap-server=kafka:9092" \
+  --name order-service \
+  mrpark219/order-service:1.0
+```
+
+- `-e "spring.datasource.url=jdbc:mariadb://mariadb:3306/mydb"`: 내부 네트워크에 있는 `mariadb` 컨테이너와 연결할 DB URL 지정
+- `-e "eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/"`: Eureka 서버의 서비스 등록 주소를 환경변수로 설정
+- `-e "management.zipkin.tracing.endpoint=http://zipkin:9411/api/v2/spans"`: Zipkin으로 분산 추적 데이터를 전송하기 위한 엔드포인트 설정
+- `-e "kafka.producer.bootstrap-server=kafka:9092"`: Kafka 브로커 주소 지정 (메시지 큐를 통한 비동기 통신을 위해 사용)
+- `mrpark219/order-service:1.0`: 사용할 이미지 이름 및 태그
