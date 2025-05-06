@@ -36,3 +36,7 @@ eureka:
 logging:
   level:
     com.example.catalogservice: DEBUG
+
+kafka:
+  consumer:
+    bootstrap-server: localhost:9093

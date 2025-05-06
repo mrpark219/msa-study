@@ -3,6 +3,7 @@ package com.example.catalogservice.messagequeue;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -17,12 +18,15 @@ import java.util.Map;
 @Configuration
 public class KafkaConsumerConfig {
 
+	@Value("${kafka.consumer.bootstrap-server}")
+	private String bootstrapServers;
+
 	@Bean
 	public ConsumerFactory<String, String> consumerFactory() {
 
 		Map<String, Object> properties = new HashMap<>();
 
-		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9093");
+		properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
 		properties.put(ConsumerConfig.GROUP_ID_CONFIG, "consumerGroupId");
 		properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
