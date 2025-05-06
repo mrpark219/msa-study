@@ -183,3 +183,18 @@ docker run -d \
 - `-e "management.zipkin.tracing.endpoint=http://zipkin:9411/api/v2/spans"`: Zipkin으로 분산 추적 데이터를 전송하기 위한 엔드포인트 설정
 - `-e "kafka.producer.bootstrap-server=kafka:9092"`: Kafka 브로커 주소 지정 (메시지 큐를 통한 비동기 통신을 위해 사용)
 - `mrpark219/order-service:1.0`: 사용할 이미지 이름 및 태그
+
+## 13. Catalog Service 배포
+
+```shell
+docker run -d \
+    --network msa-study-network \
+    -e "eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/" \
+    -e "kafka.consumer.bootstrap-server=kafka:9092" \
+    --name catalog-service \
+    mrpark219/catalog-service:1.0
+```
+
+- `-e "eureka.client.serviceUrl.defaultZone=http://discovery-service:8761/eureka/"`: Eureka 서버의 서비스 등록 주소를 환경변수로 설정
+- `-e "kafka.consumer.bootstrap-server=kafka:9092"`: Kafka 브로커 주소를 설정하여 메시지를 소비할 수 있도록 지정
+- `mrpark219/catalog-service:1.0`: 사용할 이미지 이름 및 태그
